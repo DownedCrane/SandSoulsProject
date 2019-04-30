@@ -1,0 +1,36 @@
+# 3ds Max Wavefront OBJ Exporter v0.94b - (c)2007 guruware
+# File Created: 22.11.2010 12:16:54
+
+newmtl T_BlitzGS_Rubbish_02
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\3D modeli\Мусор\T_BlitzGS_rubbish_02_c.bmp
+	map_Kd D:\3D modeli\Мусор\T_BlitzGS_rubbish_02_c.bmp
+	map_Ks D:\3D modeli\Мусор\T_BlitzGS_rubbish_02_s.bmp
+	map_bump D:\3D modeli\Мусор\T_BlitzGS_rubbish_02_s.bmp
+	bump D:\3D modeli\Мусор\T_BlitzGS_rubbish_02_s.bmp
+
+newmtl T_BlitzGS_Rubbish_01
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 1.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\3D modeli\Мусор\T_BlitzGS_rubbish_01_c.bmp
+	map_Kd D:\3D modeli\Мусор\T_BlitzGS_rubbish_01_c.bmp
+	map_Ks D:\3D modeli\Мусор\T_BlitzGS_rubbish_01_s.bmp
+	map_bump D:\3D modeli\Мусор\T_BlitzGS_rubbish_01_s.bmp
+	bump D:\3D modeli\Мусор\T_BlitzGS_rubbish_01_s.bmp
