@@ -1,0 +1,82 @@
+fileFormatVersion: 2
+guid: 88a01efe37e1f9f4a8a0c9445d4c420a
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 232528478, guid: 43a8bbf65be290d44ba52b94476242b9, type: 3}
+  version: 17
+  mGraphInstanceData:
+  - graphLabel: Sand
+    prototypeName: Sand
+    graphDescIndex: 0
+    generateAllOutputs: 0
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://Sand_Wavy\" label=\"\" >\n </sbspreset>\n"
+    shaderName: Standard
+    outputNames: height,normal,baseColor,ambientOcclusion,metallic
+    texturePackingList:
+    - outputName: height
+      alphaSource: height
+    - outputName: normal
+      alphaSource: normal
+    - outputName: baseColor
+      alphaSource: baseColor
+    - outputName: ambientOcclusion
+      alphaSource: ambientOcclusion
+    - outputName: roughness
+      alphaSource: roughness
+    - outputName: metallic
+      alphaSource: smoothness
+    textureParameters:
+    - textureName: Sand - roughness
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: Sand - height
+      wrapMode: 2
+      filterMode: 1
+      aniso: 1
+    - textureName: Sand - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: Sand - baseColor
+      wrapMode: 1
+      filterMode: 1
+      aniso: 1
+    - textureName: Sand - ambientOcclusion
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: Sand - metallic
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList:
+    - outputName: height
+      bLinear: 1
+    - outputName: normal
+      bLinear: 1
+    - outputName: baseColor
+      bLinear: 0
+    - outputName: ambientOcclusion
+      bLinear: 1
+    - outputName: roughness
+      bLinear: 1
+    - outputName: metallic
+      bLinear: 1
+    inputTextureMap: []
+    targetSettingList:
+    - label: 
+      bLockRatio: 1
+      textureWidth: 256
+      textureHeight: 256
+      textureFormat: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 5086727986680746777, guid: 88a01efe37e1f9f4a8a0c9445d4c420a,
+      type: 3}
+    generatedTextures: []
