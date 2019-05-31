@@ -2,7 +2,7 @@
 using System.Collections;
 
 // AimBehaviour inherits from GenericBehaviour. This class corresponds to aim and strafe behaviour.
-public class AimBehaviourBasic : GenericBehaviour
+public class AimBehaviour : GenericBehaviour
 {
 	public string aimButton = "Aim", shoulderButton = "Aim Shoulder";     // Default aim and switch shoulders buttons.
 	public Texture2D crosshair;                                           // Crosshair texture.
@@ -12,17 +12,30 @@ public class AimBehaviourBasic : GenericBehaviour
 
 	private int aimBool;                                                  // Animator variable related to aiming.
 	private bool aim;                                                     // Boolean to determine whether or not the player is aiming.
+	private int cornerBool;                                               // Animator variable related to cover corner..
+	private bool peekCorner;                                              // Boolean to get whether or not the player is on a cover corner.
+	private Vector3 initialRootRotation;                                  // Initial root bone local rotation.
+	private Vector3 initialHipsRotation;                                  // Initial hips rotation related to the root bone.
+	private Vector3 initialSpineRotation;                                 // Initial spine rotation related to the root bone.
 
 	// Start is always called after any Awake functions.
 	void Start ()
 	{
 		// Set up the references.
 		aimBool = Animator.StringToHash("Aim");
+
+		cornerBool = Animator.StringToHash("Corner");
+
+		initialRootRotation = behaviourManager.GetAnim.GetBoneTransform(HumanBodyBones.Hips).parent.localEulerAngles;
+		initialHipsRotation = behaviourManager.GetAnim.GetBoneTransform(HumanBodyBones.Hips).localEulerAngles;
+		initialSpineRotation = behaviourManager.GetAnim.GetBoneTransform(HumanBodyBones.Spine).localEulerAngles;
 	}
 
 	// Update is used to set features regardless the active behaviour.
 	void Update ()
 	{
+		peekCorner = behaviourManager.GetAnim.GetBool(cornerBool);
+
 		// Activate/deactivate aim by input.
 		if (Input.GetAxisRaw(aimButton) != 0 && !aim)
 		{
@@ -37,7 +50,7 @@ public class AimBehaviourBasic : GenericBehaviour
 		canSprint = !aim;
 
 		// Toggle camera aim position left or right, switching shoulders.
-		if (aim && Input.GetButtonDown (shoulderButton))
+		if (aim && Input.GetButtonDown (shoulderButton) && !peekCorner)
 		{
 			aimCamOffset.x = aimCamOffset.x * (-1);
 			aimPivotOffset.x = aimPivotOffset.x * (-1);
@@ -60,6 +73,10 @@ public class AimBehaviourBasic : GenericBehaviour
 		{
 			aim = true;
 			int signal = 1;
+			if (peekCorner)
+			{
+				signal = (int)Mathf.Sign(behaviourManager.GetH);
+			}
 			aimCamOffset.x = Mathf.Abs(aimCamOffset.x) * signal;
 			aimPivotOffset.x = Mathf.Abs(aimPivotOffset.x) * signal;
 			yield return new WaitForSeconds(0.1f);
@@ -114,10 +131,23 @@ public class AimBehaviourBasic : GenericBehaviour
 
 		float minSpeed = Quaternion.Angle(transform.rotation, targetRotation) * aimTurnSmoothing;
 
-		// Rotate entire player to face camera.
-		behaviourManager.SetLastDirection(forward);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, minSpeed * Time.deltaTime);
-
+		// Peeking corner situation.
+		if (peekCorner)
+		{
+			// Rotate only player upper body when peeking a corner.
+			transform.rotation = Quaternion.LookRotation(-behaviourManager.GetLastDirection());
+			targetRotation *= Quaternion.Euler(initialRootRotation);
+			targetRotation *= Quaternion.Euler(initialHipsRotation);
+			targetRotation *= Quaternion.Euler(initialSpineRotation);
+			Transform spine = behaviourManager.GetAnim.GetBoneTransform(HumanBodyBones.Spine);
+			spine.rotation = targetRotation;
+		}
+		else
+		{
+			// Rotate entire player to face camera.
+			behaviourManager.SetLastDirection(forward);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, minSpeed * Time.deltaTime);
+		}
 	}
 
  	// Draw the crosshair when aiming.

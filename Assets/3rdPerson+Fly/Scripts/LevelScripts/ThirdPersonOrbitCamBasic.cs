@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 // This class corresponds to the 3rd person camera features.
-public class ThirdPersonOrbitCamBasic : MonoBehaviour 
+public class ThirdPersonOrbitCam : MonoBehaviour 
 {
 	public Transform player;                                           // Player's reference.
 	public Vector3 pivotOffset = new Vector3(0.0f, 1.0f,  0.0f);       // Offset to repoint the camera.
@@ -26,6 +26,12 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 	private float defaultFOV;                                          // Default camera Field of View.
 	private float targetFOV;                                           // Target camera Field of View.
 	private float targetMaxVerticalAngle;                              // Custom camera max vertical clamp angle.
+	private float deltaH = 0;                                          // Delta to horizontaly rotate camera when locking its orientation.      
+	private Vector3 firstDirection;                                    // The direction to lock camera for the first time.
+	private Vector3 directionToLock;                                   // The current direction to lock the camera.
+	private float recoilAngle = 0f;                                    // The angle to vertically bounce the camera in a recoil movement.
+	private Vector3 forwardHorizontalRef;                              // The forward reference on horizontal plane when clamping camera rotation.
+	private float leftRelHorizontalAngle, rightRelHorizontalAngle;     // The left and right angles to limit rotation relative to the forward reference.
 
 	// Get the camera horizontal angle.
 	public float GetH { get { return angleH; } }
@@ -67,6 +73,23 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 		// Set vertical movement limit.
 		angleV = Mathf.Clamp(angleV, minVerticalAngle, targetMaxVerticalAngle);
 
+		// Set vertical camera bounce.
+		angleV = Mathf.LerpAngle(angleV, angleV + recoilAngle, 10f*Time.deltaTime);
+
+		// Handle camera orientation lock.
+		if (firstDirection != Vector3.zero)
+		{
+			angleH -= deltaH;
+			UpdateLockAngle();
+			angleH += deltaH;
+		}
+
+		// Handle camera horizontal rotation limits if set.
+		if(forwardHorizontalRef != default(Vector3))
+		{
+			ClampHorizontal();
+		}
+
 		// Set camera orientation.
 		Quaternion camYRotation = Quaternion.Euler(0, angleH, 0);
 		Quaternion aimRotation = Quaternion.Euler(-angleV, angleH, 0);
@@ -92,6 +115,83 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 		smoothCamOffset = Vector3.Lerp(smoothCamOffset, noCollisionOffset, smooth * Time.deltaTime);
 
 		cam.position =  player.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
+
+		// Amortize Camera vertical bounce.
+		if (recoilAngle > 0)
+			recoilAngle -= 5 * Time.deltaTime;
+		else if(recoilAngle < 0)
+			recoilAngle += 5 * Time.deltaTime;
+	}
+
+	// Set/Unset horizontal rotation limit angles relative to custom direction.
+	public void ToggleClampHorizontal(float LeftAngle = 0, float RightAngle = 0, Vector3 fwd = default(Vector3))
+	{
+		forwardHorizontalRef = fwd;
+		leftRelHorizontalAngle = LeftAngle;
+		rightRelHorizontalAngle = RightAngle;
+	}
+
+	// Limit camera horizontal rotation.
+	private void ClampHorizontal()
+	{
+		// Get angle between reference and current forward direction.
+		Vector3 cam2dFwd = this.transform.forward;
+		cam2dFwd.y = 0;
+		float angleBetween = Vector3.Angle(cam2dFwd, forwardHorizontalRef);
+		float sign = Mathf.Sign(Vector3.Cross(cam2dFwd, forwardHorizontalRef).y);
+		angleBetween = angleBetween * sign;
+
+		// Get current input movement to compensate after limit angle is reached.
+		float acc = Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * horizontalAimingSpeed;
+		acc += Mathf.Clamp(Input.GetAxis("Analog X"), -1, 1) * 60 * horizontalAimingSpeed * Time.deltaTime;
+
+		// Limit left angle.
+		if (sign < 0 && angleBetween < leftRelHorizontalAngle)
+		{
+			if (acc > 0)
+				angleH -= acc;
+		}
+		// Limit right angle.
+		else if (angleBetween > rightRelHorizontalAngle)
+		{
+			if (acc < 0)
+				angleH -= acc;
+		}
+	}
+
+	// Bounce the camera vertically.
+	public void BounceVertical(float degrees)
+	{
+		recoilAngle = degrees;
+	}
+
+	// Handle current camera facing when locking on a specific dynamic orientation.
+	private void UpdateLockAngle()
+	{
+		directionToLock.y = 0f;
+		float centerLockAngle = Vector3.Angle(firstDirection, directionToLock);
+		Vector3 cross = Vector3.Cross(firstDirection, directionToLock);
+		if (cross.y < 0) centerLockAngle = -centerLockAngle;
+		deltaH = centerLockAngle;
+	}
+
+	// Lock camera orientation to follow a specific direction. Usually used in short movements.
+	// Example uses: (player turning cover corner, skirting convex wall, vehicle turning)
+	public void LockOnDirection(Vector3 direction)
+	{
+		if (firstDirection == Vector3.zero)
+		{
+			firstDirection = direction;
+			firstDirection.y = 0f;
+		}
+		directionToLock = Vector3.Lerp(directionToLock, direction, 0.15f * smooth * Time.deltaTime);
+	}
+
+	// Unlock camera orientation to free mode.
+	public void UnlockOnDirection()
+	{
+		deltaH = 0;
+		firstDirection = directionToLock = Vector3.zero;
 	}
 
 	// Set camera offsets to custom values.
