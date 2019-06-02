@@ -58,12 +58,18 @@ namespace CoverShooter
             _isDead = true;
         }
 
+
         /// <summary>
         /// Reduce health on bullet hit.
         /// </summary>
         public void OnHit(Hit hit)
         {
             Deal(hit.Damage);
+        }
+
+        public void Heal(float amount)
+        {
+            Health += amount;
         }
 
         /// <summary>
