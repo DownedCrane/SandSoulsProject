@@ -5,15 +5,29 @@ using VehicleBehaviour;
 //[RequireComponent(typeof(AudioSource))]
 public class ON_OFF : MonoBehaviour
 {
-
+    [Header("Находится ли игрок в машине")]
     public bool k;
-
+    public bool car_active;
     public GameObject carCamera;
     public GameObject car;
     public GameObject person;
 
     private AudioSource audioSource;
+    
+    void Start()
+    {
+        car_active = false;
+    }
 
+    public void Activate()
+    {
+        car_active = true;
+    }
+
+    public void Deactivate()
+    {
+        car_active = false;
+    }
 
     void Update()
     {
@@ -24,7 +38,7 @@ public class ON_OFF : MonoBehaviour
 
 
 
-        if (Input.GetKeyUp(KeyCode.F) && k == false)
+        if (Input.GetKeyUp(KeyCode.F) && k == false && car_active == true)
         {
             m1.enabled = true;
             m2.enabled = true;
