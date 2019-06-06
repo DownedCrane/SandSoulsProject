@@ -4,16 +4,34 @@ using UnityEngine;
 
 public class Off_Listener : MonoBehaviour
 {
+    [Header("Находится ли игрок в машине")]
+    public bool k;
+    public bool car_active;
+
 
     public AudioListener person;
     public AudioListener car;
-    private bool k = true;
+
+    void Start()
+    {
+        car_active = false;
+    }
+
+    public void Activate()
+    {
+        car_active = true;
+    }
+
+    public void Deactivate()
+    {
+        car_active = false;
+    }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.F) && k == true)
+        if (Input.GetKeyUp(KeyCode.F) && k == true && car_active == true)
         {
             person.enabled = false;
             car.enabled = true;

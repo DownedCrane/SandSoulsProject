@@ -49,6 +49,11 @@ public class MENU : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
 
+    
 }
 
