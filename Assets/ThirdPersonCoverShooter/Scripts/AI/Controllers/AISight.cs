@@ -168,7 +168,7 @@ namespace CoverShooter
             var head = _actor == null ? (transform.position + Vector3.up * 2) : _actor.StandingTopPosition;
 
             direction = Quaternion.AngleAxis(-FieldOfView * 0.5f, Vector3.up) * direction;
-
+            /* НЕ БИЛДИТСЯ
             Handles.color = new Color(0.5f, 0.3f, 0.3f, 0.1f);
             Handles.DrawSolidArc(head, Vector3.up, direction, FieldOfView, Distance);
 
@@ -176,6 +176,7 @@ namespace CoverShooter
             Handles.DrawWireArc(head, Vector3.up, direction, FieldOfView, Distance);
             Handles.DrawLine(head, head + direction * Distance);
             Handles.DrawLine(head, head + Quaternion.AngleAxis(FieldOfView, Vector3.up) * direction * Distance);
+            */
         }
 
         #endregion
