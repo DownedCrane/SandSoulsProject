@@ -31,7 +31,10 @@ public class WaveTimer : MonoBehaviour
 
     void timerEnded()
     {
-        myObject.SetActive(true);
+        if (myObject != null) {
+            myObject.SetActive(true);
+        }
+        
         //do your stuff here.
     }
 
