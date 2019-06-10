@@ -6,6 +6,7 @@ public class WaveTimer : MonoBehaviour
 
     public float targetTime = 60.0f;
     public GameObject myObject;
+    public GameObject OTHERObject;
     private bool working;
     void Start()
     {
@@ -33,6 +34,8 @@ public class WaveTimer : MonoBehaviour
     {
         if (myObject != null) {
             myObject.SetActive(true);
+
+            OTHERObject.SetActive(false);
         }
         
         //do your stuff here.

@@ -4,11 +4,14 @@ using UnityEngine.SceneManagement;
 
 namespace CoverShooter
 {
+
     /// <summary>
     /// Reset the level on character's death.
     /// </summary>
     public class ResetOnDeath : MonoBehaviour
     {
+
+        public GameObject death;
         /// <summary>
         /// Time in seconds to reset the level after character's death
         /// </summary>
@@ -25,6 +28,7 @@ namespace CoverShooter
 
         private IEnumerator delayedReset()
         {
+            death.SetActive(false);
             yield return new WaitForSeconds(Delay);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }

@@ -7,6 +7,11 @@ namespace CoverShooter
     /// </summary>
     public class CharacterHealth : MonoBehaviour
     {
+        public GameObject death;
+        public GameObject personcamera;
+
+        public GameObject canvas;
+
         /// <summary>
         /// Current health of the character.
         /// </summary>
@@ -48,7 +53,12 @@ namespace CoverShooter
         private void LateUpdate()
         {
             if (_isDead)
+            {
                 Health = 0;
+                death.SetActive(true);
+                personcamera.SetActive(false);
+                canvas.SetActive(false);
+            }
             else
                 Health = Mathf.Clamp(Health + Regeneration * Time.deltaTime, 0, MaxHealth);
         }
